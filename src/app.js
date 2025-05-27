@@ -1,16 +1,24 @@
 const express= require("express")
 const app= express()
 
-app.use("/test",(req,res)=>{
-    res.send("hello from 1")
+
+app.post("/test",(req,res)=>{
+    res.send("hello from post call")
 })
 
-app.use("/product",(req,res)=>{
-    res.send("hello from 2")
+app.get("/test",(req,res)=>{
+    res.send("hello from get call")
 })
-app.use("/",(req,res)=>{
-    res.send("hello from start")
+
+app.delete("/test",(req,res)=>{
+    res.send("hello from delete user")
 })
+
+app.use("/test",(req,res)=>{
+    res.send("hello from main call")
+})
+
+
 
 app.listen(5566,()=>{
     console.log("hello from 5566 server")
