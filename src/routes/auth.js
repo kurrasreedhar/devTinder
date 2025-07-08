@@ -21,11 +21,12 @@ try{
       res.cookie("token",token, {
     expires: new Date(Date.now() + 24 * 3600000) // cookie will be removed after 24 hours
   })
-    res.send("user logged in succesfully")
+    res.send(user)
 
 }
 catch(err){
- res.send("error in login process "+err.message)
+    console.log(err)
+ res.status(400).send("error" + err.message)
 }
 
  })
@@ -41,8 +42,12 @@ authRouter.post("/signup", async(req, res)=>{
             emailId,
             password:Hpassword,
         })
-        await user.save()
-        res.send("user signedup succesfully")
+     const savedUser=  await user.save()
+      const token = await savedUser.getJWT()
+      res.cookie("token",token, {
+    expires: new Date(Date.now() + 24 * 3600000) // cookie will be removed after 24 hours
+             })
+     res.json({message:"user saved successfully",data:savedUser})
     }catch(err){
         res.send("error in signup process "+err.message)
     }

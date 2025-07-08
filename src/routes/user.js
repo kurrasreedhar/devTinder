@@ -3,7 +3,7 @@ const userRouter= express.Router()
 const{Userauth} = require("../middelware/Userauth")
 const connectionRequest= require("../model/connectionModel")
 const Users=require("../model/userModel")
-   const USER_SAFE_DATA = "firstName lastName photoUrl age gender about skills";
+const USER_SAFE_DATA = "firstName lastName photoUrl age gender bio skills";
 
 userRouter.get("/user/request/pendings" ,Userauth,async(req,res)=>{
     const user= req.user;
@@ -11,17 +11,16 @@ userRouter.get("/user/request/pendings" ,Userauth,async(req,res)=>{
   const data= await connectionRequest.find({
     toUserId:user._id,
     status:"interesed"
-  }).populate("fromUserId","firstName lastName")
+  }).populate("fromUserId","firstName lastName bio gender age photoUrl")
   console.log(data)
   res.json({message:"recieved requests from ",connections:data,})
 })
 
 userRouter.get("/user/request/connections",Userauth,async(req,res)=>{
   const loggedInUser=req.user
-
-  const data= await connectionRequest.find({
+ const data= await connectionRequest.find({
     $or:[{toUserId:loggedInUser,status:"accepted"},{fromUserId:loggedInUser,status:"accepted"}]
-  }).populate("fromUserId","firstName lastName").populate("toUserId","firstName lastName")
+  }).populate("fromUserId","firstName lastName photoUrl age gender bio").populate("toUserId","firstName lastName photoUrl age gender bio ")
   console.log(data)
   const requests= data.map((row)=>{
     if( row.fromUserId._id.toString()=== loggedInUser._id.toString()){

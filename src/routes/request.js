@@ -51,7 +51,7 @@ requestRouter.post("/request/review/:status/:requestId",Userauth,async(req,res)=
             status:"interesed"
         })
         if(!connectionRequest){
-            throw new Error("invalid request")
+            throw new Error("invalid connection id request")
         }
         connectionRequest.status=status;
         const data= await connectionRequest.save()
